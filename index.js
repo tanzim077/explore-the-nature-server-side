@@ -116,16 +116,12 @@ async function run() {
             const updateSchedule = req.body;
             const filter = { _id: ObjectId(id) };
             const options = { upsert: true };
-            const updateDoc = {
-                $set: {
-                    userName: updateSchedule.userName,
-                    userEmail: updateSchedule.userEmail,
-                    userPhone: updateSchedule.userPhone,
-                    userAddress: updateSchedule.userAddress,
-                    userStatus :"Ok"
-                }
-            };
-            const result = await scheduleTable.updateOne(filter, updateDoc, options);
+            // const updateDoc = {
+            //     $set: {
+            //         userStatus :"Ok"
+            //     }
+            // };
+            const result = await scheduleTable.updateOne(filter, updateSchedule, options);
             res.send(result)
         })
 
