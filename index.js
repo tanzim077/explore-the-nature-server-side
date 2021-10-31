@@ -23,8 +23,7 @@ async function run() {
         const scheduleTable = database.collection("Schedule");
         const storyBlogTable = database.collection("StoryBlog");
 
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~EVENT~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        // --------------// GET Event // ------------------------------
+        // --------------// GET  // ------------------------------
         app.get('/events', async (req, res) => {
             const cursor = eventTable.find({});
             const events = await cursor.toArray();
@@ -43,7 +42,7 @@ async function run() {
             res.send({ storyBlog });
         })
      
-        // --------------// POST an Event // ------------------------------
+        // --------------// POST  // ------------------------------
         // Event post
         app.post('/events/create', async (req, res) => {
             const event = req.body;
@@ -57,7 +56,7 @@ async function run() {
             res.json(result)
         })
 
-        // --------------// UPDATE an Event // ------------------------------
+        // --------------// UPDATE // ------------------------------
         // Event update
         app.get('/events/:id', async (req, res) => {
             const id = req.params.id;
@@ -112,8 +111,26 @@ async function run() {
             res.send(result)
         })
 
+        app.put('/schedules/status/:id', async (req, res) => {
+            const id = req.params.id;
+            const updateSchedule = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    userName: updateSchedule.userName,
+                    userEmail: updateSchedule.userEmail,
+                    userPhone: updateSchedule.userPhone,
+                    userAddress: updateSchedule.userAddress,
+                    userStatus :"Ok"
+                }
+            };
+            const result = await scheduleTable.updateOne(filter, updateDoc, options);
+            res.send(result)
+        })
 
-        // --------------// DELETE an Event // ------------------------------
+
+        // --------------// DELETE // ------------------------------
         app.delete('/events/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
