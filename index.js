@@ -21,6 +21,7 @@ async function run() {
         const database = client.db("ExploreNature");
         const eventTable = database.collection("Event");
         const scheduleTable = database.collection("Schedule");
+        const storyBlogTable = database.collection("StoryBlog");
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~EVENT~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         // --------------// GET Event // ------------------------------
@@ -36,6 +37,13 @@ async function run() {
             const schedules = await cursor.toArray();
             console.log("Hitting the get API Schedules");
             res.send({ schedules });
+        })
+        // Get StoryBlogs 
+        app.get('/storyblogs', async (req, res) => {
+            const cursor = storyBlogTable.find({});
+            const storyBlog = await cursor.toArray();
+            console.log("Hitting the get API storyBlogTable");
+            res.send({ storyBlog });
         })
      
         // --------------// POST an Event // ------------------------------
