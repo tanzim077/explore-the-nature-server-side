@@ -28,21 +28,18 @@ async function run() {
         app.get('/events', async (req, res) => {
             const cursor = eventTable.find({});
             const events = await cursor.toArray();
-            console.log("Hitting the get API");
             res.send({ events });
         })
         // Get Schedule 
         app.get('/schedules', async (req, res) => {
             const cursor = scheduleTable.find({});
             const schedules = await cursor.toArray();
-            console.log("Hitting the get API Schedules");
             res.send({ schedules });
         })
         // Get StoryBlogs 
         app.get('/storyblogs', async (req, res) => {
             const cursor = storyBlogTable.find({});
             const storyBlog = await cursor.toArray();
-            console.log("Hitting the get API storyBlogTable");
             res.send({ storyBlog });
         })
      
@@ -50,18 +47,15 @@ async function run() {
         // Event post
         app.post('/events/create', async (req, res) => {
             const event = req.body;
-            console.log("Hitting post API");
             const result = await eventTable.insertOne(event);
             res.json(result)
         })
         // Schedule post
         app.post('/schedules/create', async (req, res) => {
             const schedule = req.body;
-            console.log("Hitting post API");
             const result = await scheduleTable.insertOne(schedule);
             res.json(result)
         })
-
 
         // --------------// UPDATE an Event // ------------------------------
         // Event update
@@ -99,7 +93,6 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await scheduleTable.findOne(query);
-            console.log(result)
             res.send(result)
         })
         app.put('/schedules/:id', async (req, res) => {
