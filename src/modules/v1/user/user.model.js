@@ -14,6 +14,9 @@
  */
 
 const mongoose = require("mongoose");
+const validator = require("validator");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const { Schema } = mongoose;
 
@@ -24,9 +27,21 @@ const UserSchema = new Schema(
     },
     email: {
       type: String,
+      unique: true,
+      required: true,
+      trim: true,
+      lowercase: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new CustomError(400, "Email is invalid");
+        }
+      },
     },
     password: {
       type: String,
+      required: true,
+      minlength: 6,
+      trim: true,
     },
     address: {
       type: String,
@@ -61,5 +76,66 @@ const UserSchema = new Schema(
   }
 );
 
-module.exports = mongoose.model("User", UserSchema);
+UserSchema.methods.toJSON = function () {
+  const user = this;
+  const userObject = user.toObject();
+  delete userObject.password;
+  delete userObject.tokens;
+  delete userObject.emailToken;
 
+  return userObject;
+};
+
+UserSchema.methods.generateAuthToken = async function () {
+  const user = this;
+  const token = jwt.sign(
+    {
+      _id: user._id.toString(),
+      name: user.name,
+    },
+    process.env.JWT_SECRET
+  );
+  if (user.tokens.length === 5) {
+    user.tokens.pop();
+  }
+  user.tokens.unshift({ token });
+  await user.save();
+  return token;
+};
+
+UserSchema.statics.findByCredentials = async (email, password) => {
+  const user = await UserModel.findOne({
+    email,
+  });
+
+  if (!user) {
+    throw new Error("The email you entered is not registered in our application.");
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    throw new Error("Wrong password");
+  }
+  return user;
+};
+
+UserSchema.statics.findByEmail = async (email) => {
+  const user = await UserModel.findOne({
+    email,
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+  return user;
+};
+// Hash the plain text password before saving
+UserSchema.pre("save", async function (next) {
+  const user = this;
+  if (user.isModified("password")) {
+    user.password = await bcrypt.hash(user.password, 8);
+  }
+  next();
+});
+
+module.exports = mongoose.model("User", UserSchema);
