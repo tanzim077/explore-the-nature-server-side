@@ -17,9 +17,9 @@ class UserController {
   constructor(UserService) {
     this._userService = UserService;
     this.getUser = this.getUser.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
     this.getAllUsers = this.getAllUsers.bind(this);
     this.updateUser = this.updateUser.bind(this);
-    this.deleteUser = this.deleteUser.bind(this);
     this.createUser = this.createUser.bind(this);
     this.changeUserRole = this.changeUserRole.bind(this);
     this.deactivateUser = this.deactivateUser.bind(this);
@@ -32,16 +32,16 @@ class UserController {
       const user = await this._userService.getUser(userId);
       return res.send(user);
     } catch (err) {
-      handleCatch(err);
+      return res.status(500).send(err);
     }
   }
 
   async getAllUsers(req, res) {
     try {
-      const users = await this._userService.getUsers();
+      const users = await this._userService.getAllUsers();
       return res.send(users);
     } catch (err) {
-      handleCatch(err);
+      return res.status(500).send(err);
     }
   }
 
@@ -52,7 +52,7 @@ class UserController {
       const updatedUser = await this._userService.updateUser(userId, body);
       return res.send(updatedUser);
     } catch (err) {
-      handleCatch(err);
+      return res.status(500).send(err);
     }
   }
 
@@ -62,7 +62,7 @@ class UserController {
       const deletedUser = await this._userService.deleteUser(userId);
       return res.send(deletedUser);
     } catch (err) {
-      handleCatch(err);
+      return res.status(500).send(err);
     }
   }
   async deleteUserByEmail(req, res) {
@@ -71,7 +71,6 @@ class UserController {
       const deletedUser = await this._userService.deleteUserByEmail(email);
       return res.status(200).send(deletedUser);
     } catch (err) {
-      console.log("🚀 ~ UserController ~ deleteUserByEmail ~ err:", err);
       return res.status(500).send(err);
     }
   }
@@ -93,7 +92,7 @@ class UserController {
       const updatedUser = await this._userService.changeUserRole(userId, body);
       return res.send(updatedUser);
     } catch (err) {
-      handleCatch(err);
+      return res.status(500).send(err);
     }
   }
 
@@ -103,7 +102,7 @@ class UserController {
       const updatedUser = await this._userService.deactivateUser(userId);
       return res.send(updatedUser);
     } catch (err) {
-      handleCatch(err);
+      return res.status(500).send(err);
     }
   }
 }

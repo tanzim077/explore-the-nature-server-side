@@ -25,6 +25,32 @@ class UserService {
     await user.deleteOne();
     return user;
   }
+  static async deleteUser(id) {
+    const user = await User.findById(id);
+    await user.deleteOne();
+    return user;
+  }
+  static async getAllUsers() {
+    return await User.find({});
+  }
+  static async getUser(id) {
+    return await User.findById(id);
+  }
+  static async updateUser(id, data) {
+    const user = await User.findById(id);
+    await user.updateOne(data);
+    return user;
+  }
+  static async changeUserRole(id, data) {
+    const user = await User.findById(id);
+    await user.updateOne(data);
+    return user;
+  }
+  static async deactivateUser(id, data) {
+    const user = await User.findById(id);
+    await user.updateOne(data);
+    return user;
+  }
 }
 
 module.exports = UserService;
