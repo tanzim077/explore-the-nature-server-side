@@ -19,7 +19,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/v1", BaseRouter.getRouter());
+app.use("/api/v1", BaseRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello Explore The Nature Server!!!");

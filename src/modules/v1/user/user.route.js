@@ -19,9 +19,12 @@ const UserController = require("./user.controller");
 const UserService = require("./user.service");
 
 const userController = new UserController(UserService);
+const authMiddleware = require("../../../middlewares/auth.middleware");
 
 router.post("/create-user/", userController.createUser);
-router.get("/get-all-users/", userController.getAllUsers);
+router.get("/get-all-users/",
+    authMiddleware.authenticate,
+    userController.getAllUsers);
 router.get("/get-user/:id", userController.getUser);
 router.patch("/update-user/:id", userController.updateUser);
 router.patch("/change-user-role/:id", userController.changeUserRole);

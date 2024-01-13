@@ -12,3 +12,22 @@
  * Modified By    : Tanzim Ahmed
  * ------------------------
  */
+
+class AuthController {
+  constructor(AuthService) {
+    this._authService = AuthService;
+    this.logIn = this.logIn.bind(this);
+  }
+
+  static async logIn(req, res) {
+    try {
+      const { body } = req;
+      const user = await this._authService.logIn(body);
+      return res.send(user);
+    } catch (err) {
+      return res.status(500).send(err);
+    }
+  }
+}
+
+module.exports = AuthController;

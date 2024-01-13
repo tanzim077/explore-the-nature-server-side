@@ -15,11 +15,9 @@
 const express = require("express");
 const router = express.Router();
 const UserRouter = require("../modules/v1/user/user.route");
+const AuthRouter = require("../modules/v1/auth/auth.route");
 
-class BaseRouter {
-  static getRouter() {
-    return router.use("/users", UserRouter);
-  }
-}
+router.use("/users", UserRouter);
+router.use("/auth", AuthRouter);
 
-module.exports = BaseRouter;
+module.exports = router;
