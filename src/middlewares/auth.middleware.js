@@ -12,26 +12,25 @@
  * Modified By    : Tanzim Ahmed
  * ------------------------
  */
+const jwt = require("jsonwebtoken");
+const UserService = require("../modules/v1/user/user.service");
 
 class AuthMiddleware {
-  constructor(UserService) {
-    this._userService = UserService;
+  constructor() {
     this.authenticate = this.authenticate.bind(this);
   }
-
   static async authenticate(req, res, next) {
     try {
       const { authorization } = req.headers;
+      const token = req.header("Authorization").replace("Bearer ", "");
+      const decoded = await jwt.verify(token, process.env.JWT_SECRET);
       if (!authorization) {
-        return res.status(401).send("Unauthorized");
+        return res.status(401).send({ message: "Token not valid." });
       }
-      const [bearer, token] = authorization.split(" ");
-      if (bearer !== "Bearer") {
-        return res.status(401).send("Unauthorized");
-      }
-      const user = await this._userService.getUserByToken(token);
+      const user = await UserService.getUserByToken(decoded._id, token);
+
       if (!user) {
-        return res.status(401).send("Unauthorized");
+        return res.status(401).send({ message: "Requested User not found." });
       }
       req.user = user;
       next();

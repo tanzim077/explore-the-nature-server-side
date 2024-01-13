@@ -20,16 +20,30 @@ const UserService = require("./user.service");
 
 const userController = new UserController(UserService);
 const authMiddleware = require("../../../middlewares/auth.middleware");
+const approvedFor = require("../../../middlewares/authorizeRole.middleware");
+
+const { authenticate } = authMiddleware;
 
 router.post("/create-user/", userController.createUser);
-router.get("/get-all-users/",
-    authMiddleware.authenticate,
-    userController.getAllUsers);
+
+router.get("/get-all-users/", authenticate, userController.getAllUsers);
+
 router.get("/get-user/:id", userController.getUser);
-router.patch("/update-user/:id", userController.updateUser);
-router.patch("/change-user-role/:id", userController.changeUserRole);
-router.patch("/deactivate-user/:id", userController.deactivateUser);
-router.delete("/delete-user/:id", userController.deleteUser);
-router.delete("/delete-user-by-email/:email", userController.deleteUserByEmail);
+
+router.patch("/update-user/:id", authenticate,
+    // approvedFor("admin"),
+    userController.updateUser);
+
+router.patch("/change-user-role/:id", authenticate, userController.changeUserRole);
+
+router.patch("/deactivate-user/:id", authenticate, userController.deactivateUser);
+
+router.delete("/delete-user/:id", authenticate, userController.deleteUser);
+
+router.delete("/delete-user-by-email/:email", authenticate, userController.deleteUserByEmail);
+
+router.post("/log-in/", userController.logIn);
+
+router.post("/log-out/", authenticate, userController.logOut);
 
 module.exports = router;

@@ -13,6 +13,8 @@
  * ------------------------
  */
 
+const handleCatch = require("../../../utils/handleCatch");
+
 class UserController {
   constructor(UserService) {
     this._userService = UserService;
@@ -24,15 +26,17 @@ class UserController {
     this.changeUserRole = this.changeUserRole.bind(this);
     this.deactivateUser = this.deactivateUser.bind(this);
     this.deleteUserByEmail = this.deleteUserByEmail.bind(this);
+    this.logIn = this.logIn.bind(this);
+    this.logOut = this.logOut.bind(this);
   }
 
   async getUser(req, res) {
     try {
-      const { userId } = req.params;
-      const user = await this._userService.getUser(userId);
+      const { id } = req.params;
+      const user = await this._userService.getUser(id);
       return res.send(user);
     } catch (err) {
-      return res.status(500).send(err);
+      handleCatch(req, res, err);
     }
   }
 
@@ -41,28 +45,28 @@ class UserController {
       const users = await this._userService.getAllUsers();
       return res.send(users);
     } catch (err) {
-      return res.status(500).send(err);
+      handleCatch(req, res, err);
     }
   }
 
   async updateUser(req, res) {
     try {
       const { body } = req;
-      const { userId } = req.params;
-      const updatedUser = await this._userService.updateUser(userId, body);
+      const { id } = req.params;
+      const updatedUser = await this._userService.updateUser(id, body);
       return res.send(updatedUser);
     } catch (err) {
-      return res.status(500).send(err);
+      handleCatch(req, res, err);
     }
   }
 
   async deleteUser(req, res) {
     try {
-      const { userId } = req.params;
-      const deletedUser = await this._userService.deleteUser(userId);
+      const { id } = req.params;
+      const deletedUser = await this._userService.deleteUser(id);
       return res.send(deletedUser);
     } catch (err) {
-      return res.status(500).send(err);
+      handleCatch(req, res, err);
     }
   }
   async deleteUserByEmail(req, res) {
@@ -71,7 +75,7 @@ class UserController {
       const deletedUser = await this._userService.deleteUserByEmail(email);
       return res.status(200).send(deletedUser);
     } catch (err) {
-      return res.status(500).send(err);
+      handleCatch(req, res, err);
     }
   }
 
@@ -81,28 +85,48 @@ class UserController {
       const newUser = await this._userService.createUser(body);
       return res.send(newUser);
     } catch (err) {
-      return res.status(500).send(err);
+      handleCatch(req, res, err);
     }
   }
 
   async changeUserRole(req, res) {
     try {
       const { body } = req;
-      const { userId } = req.params;
-      const updatedUser = await this._userService.changeUserRole(userId, body);
+      const { id } = req.params;
+      const updatedUser = await this._userService.changeUserRole(id, body);
       return res.send(updatedUser);
     } catch (err) {
-      return res.status(500).send(err);
+      handleCatch(req, res, err);
     }
   }
 
   async deactivateUser(req, res) {
     try {
-      const { userId } = req.params;
-      const updatedUser = await this._userService.deactivateUser(userId);
+      const { id } = req.params;
+      const updatedUser = await this._userService.deactivateUser(id);
       return res.send(updatedUser);
     } catch (err) {
-      return res.status(500).send(err);
+      handleCatch(req, res, err);
+    }
+  }
+
+  async logIn(req, res) {
+    try {
+      const { email, password } = req.body;
+      const user = await this._userService.logIn(email, password);
+      return res.send(user);
+    } catch (err) {
+      handleCatch(req, res, err);
+    }
+  }
+
+  async logOut(req, res) {
+    try {
+      const { user, token } = req;
+      await this._userService.logOut(user, token);
+      return res.send("Logged out");
+    } catch (err) {
+      handleCatch(req, res, err);
     }
   }
 }

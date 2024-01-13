@@ -14,6 +14,8 @@
  */
 
 const User = require("./user.model");
+const CustomError = require("../../../utils/customError");
+
 class UserService {
   static async createUser(data) {
     const user = new User(data);
@@ -37,18 +39,51 @@ class UserService {
     return await User.findById(id);
   }
   static async updateUser(id, data) {
-    const user = await User.findById(id);
-    await user.updateOne(data);
-    return user;
+    const allowedUpdates = ["name", "address", "contact"];
+    return this.basicUpdate(id, allowedUpdates, data);
   }
   static async changeUserRole(id, data) {
-    const user = await User.findById(id);
-    await user.updateOne(data);
-    return user;
+    const allowedUpdates = ["role"];
+    return this.basicUpdate(id, allowedUpdates, data);
   }
   static async deactivateUser(id, data) {
     const user = await User.findById(id);
     await user.updateOne(data);
+    return user;
+  }
+  static async getUserByToken(id, token) {
+    const user = await User.findOne({
+      _id: id,
+      "tokens.token": token,
+    });
+    return user;
+  }
+  static async logIn(email, password) {
+    const user = await User.findByCredentials(email, password);
+    const token = await user.generateAuthToken();
+    return { user, token };
+  }
+
+  static async logOut(user, token) {
+    user.tokens = user.tokens.filter((tok) => {
+      return tok.token !== token;
+    });
+    await user.save();
+  }
+
+  static async basicUpdate(id, allowedUpdates, data) {
+    const updates = Object.keys(data);
+    const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
+    if (!isValidOperation) {
+      throw new CustomError(400, "Invalid updates!");
+    }
+    const keys = Object.keys(data);
+    const user = await User.findById(id);
+    if (!user) throw new CustomError(404, "User not found!");
+    keys.forEach((key) => {
+      user[key] = data[key];
+    });
+    await user.save();
     return user;
   }
 }

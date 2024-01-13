@@ -65,10 +65,45 @@ const UserSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Payment",
     },
-    authInfo: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Auth",
+    role: {
+      type: String,
+      enum: ["admin", "manager", "user"],
+      default: "user",
+      validator(value) {
+        if (!validator.isIn(value, ["admin", "manager", "user"])) {
+          throw new CustomError(400, "Invalid role");
+        }
+      },
     },
+    tokens: [
+      {
+        token: {
+          type: String,
+        },
+      },
+    ],
+    isBlocked: {
+      type: Boolean,
+      default: false,
+    },
+    isDelete: {
+      type: Boolean,
+      default: false,
+    },
+    emailToken: [
+      {
+        token: {
+          type: String,
+        },
+      },
+    ],
+    forgetPasswordToken: [
+      {
+        token: {
+          type: String,
+        },
+      },
+    ],
   },
   {
     timestamps: true,
@@ -82,6 +117,7 @@ UserSchema.methods.toJSON = function () {
   delete userObject.password;
   delete userObject.tokens;
   delete userObject.emailToken;
+  delete userObject.forgetPasswordToken;
 
   return userObject;
 };
@@ -104,7 +140,7 @@ UserSchema.methods.generateAuthToken = async function () {
 };
 
 UserSchema.statics.findByCredentials = async (email, password) => {
-  const user = await UserModel.findOne({
+  const user = await User.findOne({
     email,
   });
 
@@ -138,4 +174,5 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
-module.exports = mongoose.model("User", UserSchema);
+const User = mongoose.model("User", UserSchema);
+module.exports = User;
