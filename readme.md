@@ -2,14 +2,16 @@
 
 ## An online tour management web application
 
-To handle different kind of client side logic and operation we need this server site application. Easily store different data and find it easily from MOngoDB. Data is secure and available all the time.
+This express js Application is built in MVC pattern. 
 
 Some Features for this application:
 
-- Using Mongo DB for store data and booking schedules.
-- Create different route for handling data from MongoDB.
-- Secure User Database and Password
-- Using dynamic route.
-- Implement full crud operation
-- Hosting to live site.
-  Live Site Link: https://evil-spirit-24673.herokuapp.com/
+- Using Mongo DB for the database.
+- Module-based separation.
+- Role-based authorization and token-based authentication.
+- Store password as hash.
+- Use Mongoose pre/ post hook for multiple database operations in the same call.
+- Ensure the code's reusability and avoid common problems by implementing different design patterns.
+- Maintain ACID (Atomicity, Consistency, Isolation, and Durability) using MongoDB transaction. 
+- For some complex query use aggregation.
+- Indexing by different key for faster response
