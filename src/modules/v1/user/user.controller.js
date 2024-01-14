@@ -40,10 +40,22 @@ class UserController {
     };
   }
 
-  async getUser(req, res) {
-    const { id } = req.params;
-    const user = await this._userService.getUser(id);
+  async createUser(req, res) {
+    const { body } = req;
+    const newUser = await this._userService.createUser(body);
+    return res.send(newUser);
+  }
+
+  async logIn(req, res) {
+    const { email, password } = req.body;
+    const user = await this._userService.logIn(email, password);
     return res.send(user);
+  }
+
+  async logOut(req, res) {
+    const { user, token } = req;
+    await this._userService.logOut(user, token);
+    return res.send("Logged out");
   }
 
   async getAllUsers(req, res) {
@@ -51,10 +63,23 @@ class UserController {
     return res.send(users);
   }
 
+  async getUser(req, res) {
+    const { id } = req.params;
+    const user = await this._userService.getUser(id);
+    return res.send(user);
+  }
+
   async updateUser(req, res) {
     const { body } = req;
     const { id } = req.params;
     const updatedUser = await this._userService.updateUser(id, body);
+    return res.send(updatedUser);
+  }
+  
+  async changeUserRole(req, res) {
+    const { body } = req;
+    const { id } = req.params;
+    const updatedUser = await this._userService.changeUserRole(id, body);
     return res.send(updatedUser);
   }
 
@@ -70,35 +95,10 @@ class UserController {
     return res.status(200).send(deletedUser);
   }
 
-  async createUser(req, res) {
-    const { body } = req;
-    const newUser = await this._userService.createUser(body);
-    return res.send(newUser);
-  }
-
-  async changeUserRole(req, res) {
-    const { body } = req;
-    const { id } = req.params;
-    const updatedUser = await this._userService.changeUserRole(id, body);
-    return res.send(updatedUser);
-  }
-
   async deactivateUser(req, res) {
     const { id } = req.params;
     const updatedUser = await this._userService.deactivateUser(id);
     return res.send(updatedUser);
-  }
-
-  async logIn(req, res) {
-    const { email, password } = req.body;
-    const user = await this._userService.logIn(email, password);
-    return res.send(user);
-  }
-
-  async logOut(req, res) {
-    const { user, token } = req;
-    await this._userService.logOut(user, token);
-    return res.send("Logged out");
   }
 }
 

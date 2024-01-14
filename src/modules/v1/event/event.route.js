@@ -15,12 +15,23 @@
 
 const express = require("express");
 const router = express.Router();
+const EventController = require("./event.controller");
+const EventService = require("./event.service");
 
-router.post("/create-event/", "createUser");
-router.get("/get-all-events/", "createUser");
-router.get("/get-event/:id", "createUser");
-router.patch("/update-event/:id", "createUser");
-router.patch("/change-event-status/:id", "createUser");
-router.delete("/delete-event/:id", "createUser");
+const eventController = new EventController(EventService);
+
+const authMiddleware = require("../../../middlewares/auth.middleware");
+
+const approvedFor = require("../../../middlewares/authorizeRole.middleware");
+
+const { authenticate } = authMiddleware;
+
+router.post("/create-event/", eventController.createEvent);
+router.get("/get-event/:id", eventController.getEvent);
+router.get("/get-all-events/", eventController.getAllEvents);
+router.patch("/update-event/:id", eventController.updateEvent);
+router.patch("/join-in-event/:id", eventController.);
+router.patch("/change-event-status/:id", eventController.changeEventStatus);
+router.delete("/delete-event/:id", eventController.deleteEvent);
 
 module.exports = router;

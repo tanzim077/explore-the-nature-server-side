@@ -38,6 +38,11 @@ const EventSchema = new Schema(
     tourEndTime: {
       type: String,
     },
+    eventStatus: {
+      type: String,
+      enum: ["active", "inactive"],
+      default: "active",
+    },
     joinedUser: [
       {
         type: mongoose.Schema.Types.ObjectId,
