@@ -49,10 +49,12 @@ const UserSchema = new Schema(
     contact: {
       type: String,
     },
-    registeredEvents: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Event",
-    },
+    registeredEvents: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Event",
+      },
+    ],
     archivedEvents: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Event",

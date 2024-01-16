@@ -12,8 +12,10 @@
  * Modified By    : Tanzim Ahmed
  * ------------------------
  */
+const User = require("../user/user.model");
 const Event = require("./event.model");
 const CustomError = require("../../../utils/customError");
+const mongoose = require("mongoose");
 
 class EventService {
   static async createEvent(data, requestedUser) {
@@ -43,9 +45,33 @@ class EventService {
     return this.basicUpdate(id, allowedUpdates, data);
   }
   static async joinInEvent(id, requestedUser) {
-    const allowedUpdates = ["joinedUser"];
+    const session = await mongoose.startSession();
 
-    // return this.basicUpdate(id, allowedUpdates, data);
+    try {
+      session.startTransaction();
+      const user = await User.findById(requestedUser._id);
+      const event = await Event.findById(id);
+
+      if (!event) throw new CustomError(404, "Event not found!");
+      if (!user) throw new CustomError(404, "User not found!");
+
+      if (event.joinedUser.includes(user._id)) throw new CustomError(400, "User already joined in this event!");
+      user.registeredEvents.push(event._id);
+      if (event.eventStatus === "inactive") throw new CustomError(400, "Event is not active!");
+      event.joinedUser.push(user._id);
+
+      await user.save({ session });
+      await event.save({ session });
+
+      await session.commitTransaction();
+
+      return { event, user };
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession(); // Close the session
+    }
   }
 
   static async basicUpdate(id, allowedUpdates, data) {

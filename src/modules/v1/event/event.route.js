@@ -26,12 +26,18 @@ const approvedFor = require("../../../middlewares/authorizeRole.middleware");
 
 const { authenticate } = authMiddleware;
 
-router.post("/create-event/", eventController.createEvent);
+router.post("/create-event/", authenticate, approvedFor("admin"), eventController.createEvent);
+
 router.get("/get-event/:id", eventController.getEvent);
+
 router.get("/get-all-events/", eventController.getAllEvents);
-router.patch("/update-event/:id", eventController.updateEvent);
-router.patch("/join-in-event/:id", eventController.);
-router.patch("/change-event-status/:id", eventController.changeEventStatus);
-router.delete("/delete-event/:id", eventController.deleteEvent);
+
+router.patch("/update-event/:id", authenticate, approvedFor("admin"), eventController.updateEvent);
+
+router.delete("/delete-event/:id", authenticate, approvedFor("admin"), eventController.deleteEvent);
+
+router.patch("/change-event-status/:id", authenticate, approvedFor("admin"), eventController.changeEventStatus);
+
+router.patch("/join-in-event/:id", authenticate, approvedFor("admin", "manager", "user"), eventController.joinInEvent);
 
 module.exports = router;

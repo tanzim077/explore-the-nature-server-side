@@ -15,7 +15,9 @@
 const express = require("express");
 const router = express.Router();
 const UserRouter = require("../modules/v1/user/user.route");
+const EventRouter = require("../modules/v1/event/event.route");
 
 router.use("/users", UserRouter);
+router.use("/event", EventRouter);
 
 module.exports = router;

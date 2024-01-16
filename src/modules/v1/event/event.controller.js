@@ -41,38 +41,38 @@ class EventController {
     const { body } = req;
     const { user } = req;
 
-    const newEvent = await this._eventService.createUser(body, user);
+    const newEvent = await this._eventService.createEvent(body, user);
     return res.send(newEvent);
   }
 
   async getAllEvents(req, res) {
-    const users = await this._eventService.getAllUsers();
+    const users = await this._eventService.getAllEvents();
     return res.send(users);
   }
 
   async getEvent(req, res) {
     const { id } = req.params;
-    const user = await this._eventService.getUser(id);
+    const user = await this._eventService.getEvent(id);
     return res.send(user);
   }
 
   async updateEvent(req, res) {
     const { body } = req;
     const { id } = req.params;
-    const updatedUser = await this._eventService.updateUser(id, body);
+    const updatedUser = await this._eventService.updateEvent(id, body);
     return res.send(updatedUser);
   }
 
   async changeEventStatus(req, res) {
     const { body } = req;
     const { id } = req.params;
-    const updatedUser = await this._eventService.changeUserRole(id, body);
+    const updatedUser = await this._eventService.changeEventStatus(id, body);
     return res.send(updatedUser);
   }
 
   async deleteEvent(req, res) {
     const { id } = req.params;
-    const deletedUser = await this._eventService.deleteUser(id);
+    const deletedUser = await this._eventService.deleteEvent(id);
     return res.send(deletedUser);
   }
 

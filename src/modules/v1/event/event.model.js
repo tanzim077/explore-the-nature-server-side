@@ -22,20 +22,17 @@ const EventSchema = new Schema(
     title: {
       type: String,
     },
+    description: {
+      type: String,
+    },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    tourStartDate: {
+    startDateAndTime: {
       type: String,
     },
-    tourEndDate: {
-      type: String,
-    },
-    tourStartTime: {
-      type: String,
-    },
-    tourEndTime: {
+    endDateAndTime: {
       type: String,
     },
     eventStatus: {
@@ -52,6 +49,16 @@ const EventSchema = new Schema(
     eventCost: {
       type: Number,
     },
+    coverPhotos: [
+      {
+        type: String,
+      },
+    ],
+    photos: [
+      {
+        type: String,
+      },
+    ],
   },
   {
     timestamps: true,
