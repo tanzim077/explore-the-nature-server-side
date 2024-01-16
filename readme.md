@@ -2,7 +2,8 @@
 
 ## An online tour management web application
 
-This express js Application is built in MVC pattern. 
+This express js Application is built in MVC pattern.
+Postman documentation : <https://documenter.getpostman.com/view/17394671/2s9YsQ8qDr>
 
 Some Features for this application:
 
