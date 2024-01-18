@@ -49,7 +49,7 @@ const EventSchema = new Schema(
     eventCost: {
       type: Number,
     },
-    coverPhotos: [
+    coverImages: [
       {
         type: String,
       },

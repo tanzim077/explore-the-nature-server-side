@@ -16,8 +16,9 @@ const express = require("express");
 const router = express.Router();
 const UserRouter = require("../modules/v1/user/user.route");
 const EventRouter = require("../modules/v1/event/event.route");
-
+const PaymentRouter = require("../modules/v1/payment/payment.route");
 router.use("/users", UserRouter);
 router.use("/event", EventRouter);
+router.use("/payment", PaymentRouter);
 
 module.exports = router;

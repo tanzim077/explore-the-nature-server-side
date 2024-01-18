@@ -12,3 +12,23 @@
  * Modified By    : Tanzim Ahmed
  * ------------------------
  */
+
+const Payment = require("../payment/payment.model");
+const Event = require("./event.model");
+const CustomError = require("../../../utils/customError");
+const mongoose = require("mongoose");
+const SSLCommerzPayment = require("sslcommerz-lts");
+
+const store_id = process.env.SSLCOMMERZ_STORE_ID;
+const store_passwd = process.env.SSLCOMMERZ_STORE_PASSWORD;
+const is_live = false;
+class PaymentService {
+  static async createPayment(data, requestedUser) {
+    const payment = new Event(data);
+    payment.createdBy = requestedUser._id;
+    await payment.save();
+    return payment;
+  }
+}
+
+module.exports = PaymentService;

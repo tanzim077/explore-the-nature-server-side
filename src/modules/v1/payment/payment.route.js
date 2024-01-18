@@ -15,12 +15,9 @@
 
 const express = require("express");
 const router = express.Router();
+const PaymentController = require("./payment.controller");
+const paymentController = new PaymentController();
 
-router.post("/create-payment/", "createUser");
-router.get("/get-all-payments/", "createUser");
-router.get("/get-payment/:id", "createUser");
-router.patch("/update-payment/:id", "createUser");
-router.patch("/change-payment-status/:id", "createUser");
-router.delete("/delete-payment/:id", "createUser");
+router.get("/test-payment/", paymentController.testPayment);
 
 module.exports = router;

@@ -16,10 +16,19 @@ const User = require("../user/user.model");
 const Event = require("./event.model");
 const CustomError = require("../../../utils/customError");
 const mongoose = require("mongoose");
-
+const cd = require("../../../utils/cloudinary/cloudinary");
 class EventService {
-  static async createEvent(data, requestedUser) {
-    const event = new Event(data);
+  static async createEvent(req, requestedUser) {
+    const { body } = req;
+    const event = new Event(body);
+    if (req.files) {
+      const keys = Object.keys(req.files);
+
+      for (const key of keys) {
+        const imagePath = req.files[key][0].path;
+        event[key].push(await cd.uploadImage(imagePath));
+      }
+    }
     event.createdBy = requestedUser._id;
     await event.save();
     return event;

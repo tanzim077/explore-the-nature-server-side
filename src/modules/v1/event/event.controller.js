@@ -41,7 +41,7 @@ class EventController {
     const { body } = req;
     const { user } = req;
 
-    const newEvent = await this._eventService.createEvent(body, user);
+    const newEvent = await this._eventService.createEvent(req, user);
     return res.send(newEvent);
   }
 

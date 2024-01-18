@@ -23,10 +23,21 @@ const eventController = new EventController(EventService);
 const authMiddleware = require("../../../middlewares/auth.middleware");
 
 const approvedFor = require("../../../middlewares/authorizeRole.middleware");
+const { uploadEventCoverImage, uploadEventCoverFiles } = require("../../../utils/multer/multerUpload");
 
 const { authenticate } = authMiddleware;
+const possibleFields = [{ name: "coverImages", maxCount: 1 }];
+const filesUpload = uploadEventCoverFiles.fields(possibleFields);
 
-router.post("/create-event/", authenticate, approvedFor("admin"), eventController.createEvent);
+router.post("/create-event/", authenticate, approvedFor("admin"), (req, res, next) => {
+  filesUpload(req, res, (err) => {
+    if (err) {
+      handleMulterErrors(err, req, res, next);
+    } else {
+      eventController.createEvent(req, res);
+    }
+  });
+});
 
 router.get("/get-event/:id", eventController.getEvent);
 
