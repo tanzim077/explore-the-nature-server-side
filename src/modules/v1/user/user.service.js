@@ -15,6 +15,7 @@
 
 const User = require("./user.model");
 const CustomError = require("../../../utils/customError");
+const axios = require("axios");
 
 class UserService {
   static async createUser(data) {
@@ -85,6 +86,26 @@ class UserService {
     });
     await user.save();
     return user;
+  }
+  static async checkSPVUser(req, res) {
+    try {
+      const data = {
+        qai_id: req.body.qai_id,
+      };
+
+      const result = await axios.post(`${process.env.SPV_FETCH_URL}/check-username`, data);
+      if (result.data) {
+        return res.status(200).send({
+          status: "success",
+          user: result.data,
+          message: "User is already exists in SPV",
+        });
+      } else {
+        return res.status(404).send({ status: "failed", message: "User is not found SPV" });
+      }
+    } catch (error) {
+      return "internal server error";
+    }
   }
 }
 

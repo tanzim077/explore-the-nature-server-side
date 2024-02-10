@@ -4,7 +4,7 @@ mongoose.set("strictQuery", true);
 
 const config = {
   production: process.env.MONGODB_URL,
-  development: process.env.MONGODB_URL || process.env.MONGODB_URL_LOCAL,
+  development: process.env.MONGODB_URL_LOCAL,
   test: process.env.MONGODB_URL_TEST,
 };
 

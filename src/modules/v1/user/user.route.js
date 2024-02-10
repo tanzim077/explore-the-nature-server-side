@@ -32,7 +32,9 @@ router.post("/log-in/", userController.logIn);
 
 router.post("/log-out/", authenticate, userController.logOut);
 
-router.get("/get-all-users/", authenticate, userController.getAllUsers);
+router.get("/get-all-users/",
+    // authenticate,
+    userController.getAllUsers);
 
 router.get("/get-user/:id", userController.getUser);
 
@@ -45,5 +47,7 @@ router.delete("/delete-user/:id", authenticate, approvedFor("admin"), userContro
 router.delete("/delete-user-by-email/:email", authenticate, approvedFor("admin"), userController.deleteUserByEmail);
 
 router.patch("/deactivate-user/:id", authenticate, approvedFor("admin"), userController.deactivateUser);
+
+router.post("/test-spv/", authenticate, approvedFor("admin"), userController.checkSPVUser);
 
 module.exports = router;

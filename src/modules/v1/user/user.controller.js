@@ -28,6 +28,7 @@ class UserController {
     this.deleteUserByEmail = this.handleRequest(this.deleteUserByEmail.bind(this));
     this.logIn = this.handleRequest(this.logIn.bind(this));
     this.logOut = this.handleRequest(this.logOut.bind(this));
+    this.checkSPVUser = this.handleRequest(this.checkSPVUser.bind(this));
   }
 
   handleRequest(handler) {
@@ -75,7 +76,7 @@ class UserController {
     const updatedUser = await this._userService.updateUser(id, body);
     return res.send(updatedUser);
   }
-  
+
   async changeUserRole(req, res) {
     const { body } = req;
     const { id } = req.params;
@@ -99,6 +100,10 @@ class UserController {
     const { id } = req.params;
     const updatedUser = await this._userService.deactivateUser(id);
     return res.send(updatedUser);
+  }
+
+  async checkSPVUser(req, res) {
+    await this._userService.checkSPVUser(req, res);
   }
 }
 
