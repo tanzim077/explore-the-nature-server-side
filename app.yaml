@@ -1,5 +1,8 @@
-runtime: nodejs18
-service: default
+runtime: nodejs
+env: flex
+runtime_config:
+      operating_system: "ubuntu22"
+      runtime_version: 18
 
 handlers:
 - url: /.*

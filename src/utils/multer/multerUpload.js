@@ -37,6 +37,7 @@ function handleMulterErrors(err, req, res, next) {
       return res.status(400).send({ message: "File size too large" });
     }
   } else if (err) {
+    console.log("🚀 ~ handleMulterErrors ~ err:", err)
     return res.status(500).send({ message: "An error occurred during file upload" });
   }
   next();

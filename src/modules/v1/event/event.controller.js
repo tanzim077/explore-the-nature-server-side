@@ -14,6 +14,8 @@
  */
 
 const handleCatch = require("../../../utils/handleCatch");
+const { storeNotification } = require("../notification/notification.service");
+const Notification = require("../notification/notification.model");
 
 class EventController {
   constructor(EventService) {
@@ -81,6 +83,17 @@ class EventController {
     const { user } = req;
     const updatedUser = await this._eventService.joinInEvent(id, user);
     return res.send(updatedUser);
+  }
+  async testEvent(req, res) {
+    console.log("hit");
+    await storeNotification({
+      actionType: "test",
+    });
+    return res.send("event test route is working fine!");
+  }
+  async getAllNotifications(req, res) {
+    const notifications = await Notification.find();
+    return res.status(200).send(notifications);
   }
 }
 

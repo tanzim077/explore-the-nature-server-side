@@ -10,9 +10,10 @@ const port = process.env.PORT;
 const morgan = require("morgan");
 const BaseRouter = require("./src/routes/router");
 const router = express.Router();
+const socketRegister = require("./src/modules/v1/socket/socketConnection");
 
 DbConnection.connect();
-
+let server;
 // MiddleWare
 app.use(cors());
 app.use(morgan("dev"));
@@ -25,6 +26,11 @@ app.get("/", (req, res) => {
   res.send("Hello Explore The Nature Server!!!");
 });
 
-app.listen(port, () => {
+server = app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
+
+const socketIO = socketRegister.connectSocket(server);
+socketRegister.registerServer(socketIO);
+
+module.exports = app;
