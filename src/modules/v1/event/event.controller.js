@@ -95,6 +95,6 @@ class EventController {
     const notifications = await Notification.find();
     return res.status(200).send(notifications);
   }
-}
+  }
 
 module.exports = EventController;
